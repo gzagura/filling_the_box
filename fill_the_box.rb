@@ -72,7 +72,7 @@ def main_calculation(line)
   end
   res = FillingTheBox.calculation(box, cubes)
   puts "line: #{line}"
-  puts "result: #{res}"
+  puts "result: #{res} <--smalest amount of cubes to fill the box"
   10.times {print "---"}
   print "\n"
 end
