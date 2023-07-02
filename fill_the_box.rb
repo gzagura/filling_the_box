@@ -38,20 +38,24 @@ module FillingTheBox
     return -1 unless self.check_volumes(box, cubes) #early return comparing box vol vs all cubes vol
     original_box_vol = box.volume
     cubes = cubes.reverse
+    cubes_inside_vol = 0
     left_box_vol = nil
     result = 0
     cubes.each do |cube|
       next if (cube.side > box.min_side) # skipping cube if cube's side bigger then shortes side of box
+      break if cubes_inside_vol == box.volume # exit the loop if box is filled
       left_box_vol = original_box_vol - cube.quantity * cube.volume
       if (left_box_vol < 0)
         tmp = (original_box_vol/cube.volume).floor # finding max integer number of box fiting in box
         result += tmp
-        break if (tmp * cube.volume == original_box_vol) # exiting the loop if box filled 
+        cubes_inside_vol += tmp*cube.volume
       else
         result += cube.quantity
+        cubes_inside_vol += cube.quantity*cube.volume
         original_box_vol = left_box_vol
       end
     end
+    return -1 if cubes_inside_vol != box.volume # return -1 if there left space in box
     return result
   end
 end
@@ -63,7 +67,7 @@ end
 
 def main_calculation(line)
   arr = line.split
-  return puts "-1" unless validation(arr)
+  return puts "-1 invalid input" unless validation(arr)
   box = Box.new(arr)
   cubes = []
   dirt_cubes_arr = arr.slice(3, arr.length)
@@ -72,22 +76,26 @@ def main_calculation(line)
   end
   res = FillingTheBox.calculation(box, cubes)
   puts "line: #{line}"
-  puts "result: #{res} <--smalest amount of cubes to fill the box"
+  puts "box: #{box.x}x#{box.y}x#{box.z} cubes: #{cubes.map {|c| "#{c.side}x#{c.side}x#{c.side} q: #{c.quantity}"}}"
+  if (res == -1)
+    puts "#{res} couldn't fill the box with this cubes "  
+  else
+    puts "result: #{res} <--smalest amount of cubes to fill the box"
+  end
   10.times {print "---"}
   print "\n"
 end
 
 def validation(arr)
-  passed = true
-  arr.each do |el|
-    if numeric?(el)
-      next
-    else
-      passed = false
-      break
+  is_valid = true
+  arr.each_with_index do |el, i|
+    if (i < 3 && (el.to_i < 1 || !numeric?(el)))
+      is_valid = false
+    elsif (i > 2 && (el.to_i < 0 || !numeric?(el)))
+      is_valid = false
     end
   end
-  return passed
+  return is_valid
 end
 
 def parse(line)
