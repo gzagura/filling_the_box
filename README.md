@@ -16,7 +16,7 @@ The program can handle even things like this
 The program will answer like this 
 ```bash
   ruby fill_the_box.rb "2 2 2 8 1"
-  line: 2 2 2 8 1
+  box: 2x2x2 cubes: ["1x1x1 q: 8", "2x2x2 q: 1"]
   result: 1 <--smalest amount of cubes to fill the box
   ------------------------------
 ```
@@ -35,3 +35,9 @@ Here are the instructions:
   - a box with dimensions 2 x 3 x 4, 5 cubes of 1x1x1 and 6 cubes of 2x2x2
   - a box with dimensions 7 x 8 x 9, 1 cube of 1x1x1, 2 of 2x2x2, 3 of 4x4x4, and 4
   of 8x8x8.
+
+## Testing, what about that
+There file called "test.sh" to test if the program works correctly 
+```bash
+  bash test.sh fill_the_box.rb
+```
